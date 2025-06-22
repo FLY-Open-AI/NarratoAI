@@ -8,9 +8,13 @@ def get_fonts_cache(font_dir):
         fonts = []
         for root, dirs, files in os.walk(font_dir):
             for file in files:
-                if file.endswith(".ttf") or file.endswith(".ttc"):
+                if file.endswith((".ttf", ".ttc", ".otf")):
                     fonts.append(file)
         fonts.sort()
+        
+        if not fonts:
+            fonts = ["SimHei", "Arial", "Helvetica", "DejaVu Sans"]
+        
         st.session_state['fonts_cache'] = fonts
     return st.session_state['fonts_cache']
 
@@ -30,4 +34,12 @@ def get_songs_cache(song_dir):
                 if file.endswith(".mp3"):
                     songs.append(file)
         st.session_state['songs_cache'] = songs
-    return st.session_state['songs_cache'] 
+    return st.session_state['songs_cache']
+
+def clear_fonts_cache():
+    if 'fonts_cache' in st.session_state:
+        del st.session_state['fonts_cache']
+
+def clear_songs_cache():
+    if 'songs_cache' in st.session_state:
+        del st.session_state['songs_cache'] 

@@ -108,6 +108,22 @@ def init_global_state():
         st.session_state['ui_language'] = config.ui.get("language", utils.get_system_locale())
     if 'subclip_videos' not in st.session_state:
         st.session_state['subclip_videos'] = {}
+    
+    # 初始化字体设置，确保在Docker环境中有默认字体
+    if 'font_name' not in st.session_state:
+        # 优先使用SourceHanSansCN-Regular.otf（Docker环境中可用）
+        from webui.utils.cache import get_fonts_cache
+        font_dir = os.path.join(os.path.dirname(__file__), "resource", "fonts")
+        available_fonts = get_fonts_cache(font_dir)
+        
+        # 选择最佳默认字体
+        default_font = "SourceHanSansCN-Regular.otf"
+        if "SourceHanSansCN-Regular.otf" in available_fonts:
+            st.session_state['font_name'] = "SourceHanSansCN-Regular.otf"
+        elif available_fonts:
+            st.session_state['font_name'] = available_fonts[0]
+        else:
+            st.session_state['font_name'] = default_font
 
 
 def tr(key):

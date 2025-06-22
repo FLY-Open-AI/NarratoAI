@@ -25,6 +25,10 @@ def render_font_settings(tr):
     font_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "resource", "fonts")
     font_names = get_fonts_cache(font_dir)
 
+    # 确保字体列表不为空
+    if not font_names:
+        font_names = ["SimHei", "SourceHanSansCN-Regular.otf"]
+
     # 获取保存的字体设置
     saved_font_name = config.ui.get("font_name", "")
     saved_font_name_index = 0
@@ -122,9 +126,17 @@ def render_style_settings(tr):
 
 def get_subtitle_params():
     """获取字幕参数"""
+    # 确保font_name始终有一个有效值
+    default_font = "SourceHanSansCN-Regular.otf"  # Docker环境中可用的字体
+    font_name = st.session_state.get('font_name', default_font)
+    
+    # 如果获取到的font_name为空，使用默认值
+    if not font_name:
+        font_name = default_font
+    
     return {
         'subtitle_enabled': st.session_state.get('subtitle_enabled', True),
-        'font_name': st.session_state.get('font_name', ''),
+        'font_name': font_name,
         'font_size': st.session_state.get('font_size', 60),
         'text_fore_color': st.session_state.get('text_fore_color', '#FFFFFF'),
         'subtitle_position': st.session_state.get('subtitle_position', 'bottom'),
